@@ -8,7 +8,7 @@ public record Song
     public string Genre {get;}
 
 
-    public Song (int id, string title, string artist, string? album, string genre, TimeSpan duration)
+    public Song (int id, string title, string artist, string? album, TimeSpan duration, string genre)
     {
         ID = id;
         Title = title;
@@ -18,12 +18,27 @@ public record Song
         Genre = genre;
     }
 
-    public static void ImportSongs(string fileLocation)
+    public static List<Song> ImportSongs(string fileLocation)
     {
-       foreach(var line in File.ReadLines(fileLocation).Skip(1))
+        List<Song> SongsList = new List<Song>();
+        foreach(string line in File.ReadLines(fileLocation).Skip(1))
         {
-            Console.WriteLine(line);
+            if(string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            string[] songValues = line.Split(',');
+
+            int id = int.Parse(songValues[0]);
+            TimeSpan duration = TimeSpan.Parse(songValues[4]);
+
+            Song newSong = new Song(id,songValues[1],songValues[2],songValues[3],duration,songValues[5]);
+
+            SongsList.Add(newSong);
         }
+
+        return SongsList;
 
     }
 }
