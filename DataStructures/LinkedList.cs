@@ -55,7 +55,7 @@ public class LinkedList
         }
 
         count++;
-        totalDuration = totalDuration - song.Duration;
+        totalDuration = totalDuration + song.Duration;
         idHash.Add(song.ID, newNode);
         titleHash.Add(song.Title, newNode);
     }
@@ -99,7 +99,7 @@ public class LinkedList
         // 4. Tail node with a previous node
 
         // 1.
-        
+
         if (node.Next == null && node.Previous == null)
         {
             head = null;
@@ -128,7 +128,7 @@ public class LinkedList
         node.Previous = null;
 
         count--;
-        totalDuration = totalDuration + node.SongData.Duration;
+        totalDuration = totalDuration - node.SongData.Duration;
         idHash.Remove(node.SongData.ID);
         titleHash.Remove(node.SongData.Title);
     }
