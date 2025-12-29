@@ -6,17 +6,17 @@ public class LinkedList
     private int count;
     public int Count
     {
-        get{return count;}
+        get { return count; }
     }
 
     private TimeSpan totalDuration;
     public TimeSpan TotalDuration
     {
-        get{return totalDuration;}
+        get { return totalDuration; }
     }
 
-    private readonly Dictionary<int,Node> idHash;
-    private readonly Dictionary<string,Node> titleHash;
+    private readonly Dictionary<int, Node> idHash;
+    private readonly Dictionary<string, Node> titleHash;
 
     public LinkedList()
     {
@@ -24,8 +24,8 @@ public class LinkedList
         tail = null;
         count = 0;
         totalDuration = new TimeSpan();
-        idHash = new Dictionary<int,Node>();
-        titleHash = new Dictionary<string,Node>();
+        idHash = new Dictionary<int, Node>();
+        titleHash = new Dictionary<string, Node>();
     }
 
     public void Add(Song song)
@@ -35,14 +35,14 @@ public class LinkedList
             throw new ArgumentNullException(nameof(song));
         }
 
-        if(idHash.ContainsKey(song.ID) || titleHash.ContainsKey(song.Title))
+        if (idHash.ContainsKey(song.ID) || titleHash.ContainsKey(song.Title))
         {
             throw new Exception("Duplicate Song");
         }
 
         Node newNode = new Node(song);
 
-        if(head == null)
+        if (head == null)
         {
             head = newNode;
             tail = newNode;
@@ -53,14 +53,42 @@ public class LinkedList
             newNode.Previous = tail;
             tail = newNode;
         }
-        
+
         count++;
-        totalDuration = totalDuration + song.Duration;
-        idHash.Add(song.ID,newNode);
-        titleHash.Add(song.Title,newNode);
+        totalDuration = totalDuration - song.Duration;
+        idHash.Add(song.ID, newNode);
+        titleHash.Add(song.Title, newNode);
     }
 
     public void Delete(string songTitle)
+    {
+        if (head == null)
+        {
+            throw new Exception("List contains no nodes");
+        }
+        if (!titleHash.TryGetValue(songTitle, out Node? node))
+        {
+            throw new Exception("Song title not present in list");
+        }
+
+        DeleteNode(node);
+    }
+
+        public void Delete(int songId)
+    {
+        if (head == null)
+        {
+            throw new Exception("List contains no nodes");
+        }
+        if (!idHash.TryGetValue(songId, out Node? node))
+        {
+            throw new Exception("Song id not present in list");
+        }
+
+        DeleteNode(node);
+    }
+
+    public void DeleteNode(Node node)
     {
         // Delete by title
 
@@ -70,29 +98,21 @@ public class LinkedList
         // 3. Middle node (has both next and prev)
         // 4. Tail node with a previous node
 
-        if(head == null)
-        {
-            throw new Exception("List contains no nodes");
-        }
-        if(!titleHash.TryGetValue(songTitle, out Node? node))
-        {
-            throw new Exception("Song title not present in list");
-        }
-
         // 1.
-        if(node.Next == null && node.Previous == null)
+        
+        if (node.Next == null && node.Previous == null)
         {
             head = null;
             tail = null;
         }
         // 2.
-        else if(node.Previous == null)
+        else if (node.Previous == null)
         {
             head = node.Next;
             node.Next!.Previous = null;
         }
         // 4.
-        else if(node.Next == null)
+        else if (node.Next == null)
         {
             tail = node.Previous;
             node.Previous.Next = null;
