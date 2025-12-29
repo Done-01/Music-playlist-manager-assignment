@@ -1,3 +1,5 @@
+using System.Transactions;
+
 public class LinkedList
 {
     private Node? head;
@@ -15,7 +17,6 @@ public class LinkedList
         get { return totalDuration; }
     }
 
-    private readonly Dictionary<int, Node> idHash;
     private readonly Dictionary<string, Node> titleHash;
 
     public LinkedList()
@@ -24,7 +25,6 @@ public class LinkedList
         tail = null;
         count = 0;
         totalDuration = new TimeSpan();
-        idHash = new Dictionary<int, Node>();
         titleHash = new Dictionary<string, Node>();
     }
 
@@ -35,7 +35,7 @@ public class LinkedList
             throw new ArgumentNullException(nameof(song));
         }
 
-        if (idHash.ContainsKey(song.ID) || titleHash.ContainsKey(song.Title))
+        if (titleHash.ContainsKey(song.Title))
         {
             throw new Exception("Duplicate Song");
         }
@@ -56,7 +56,6 @@ public class LinkedList
 
         count++;
         totalDuration = totalDuration + song.Duration;
-        idHash.Add(song.ID, newNode);
         titleHash.Add(song.Title, newNode);
     }
 
@@ -74,18 +73,37 @@ public class LinkedList
         DeleteNode(node);
     }
 
-        public void Delete(int songId)
+    public void Delete(int index)
     {
         if (head == null)
         {
             throw new Exception("List contains no nodes");
         }
-        if (!idHash.TryGetValue(songId, out Node? node))
+        if (index < 0 || index >= count)
         {
-            throw new Exception("Song id not present in list");
+            throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        DeleteNode(node);
+        Node? current;
+
+        if (index < count / 2)
+        {
+            current = head;
+            for(int i = 0; i < index; i++)
+            {
+                current = current.Next!;
+            }
+        }
+        else
+        {
+            current = tail;
+            for(int i = count - 1; i > index; i--)
+            {
+                current = current.Previous!;
+            }
+        }
+
+        DeleteNode(current!);
     }
 
     public void DeleteNode(Node node)
@@ -129,10 +147,19 @@ public class LinkedList
 
         count--;
         totalDuration = totalDuration - node.SongData.Duration;
-        idHash.Remove(node.SongData.ID);
         titleHash.Remove(node.SongData.Title);
     }
 
+    public void Print()
+    {
+        Node? current = head;
+
+        for(int i = 0; i < count; i++)
+        {
+            Console.WriteLine(current.SongData.Title);
+            current = current.Next;
+        }
+    }
     public static void Sort(LinkedList list)
     {
         // Sort by title / duration
