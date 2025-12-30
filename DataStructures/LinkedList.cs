@@ -166,6 +166,9 @@ public class LinkedList
     public void Test2()
     {
         Node[] result = MergeSort.Split(head);
+        
+        Console.Write("\n" + result[0] + "\n" + result[1]);
+
     }
 
     // recursion testing
