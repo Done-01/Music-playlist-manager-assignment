@@ -37,24 +37,21 @@ public class MergeSort
 
         // test
         Node testLeft = left;
-        Node testRight = right;
-
+        Console.WriteLine("Left half: ");
         while(testLeft != null)
         {
             Console.WriteLine(testLeft);
             testLeft = testLeft.Next;
         }
-        Console.WriteLine();
+
+        Node testRight = right;
+        Console.WriteLine("Right half: ");
         while(testRight != null)
         {
             Console.WriteLine(testRight);
             testRight = testRight.Next;
         }
-        Console.WriteLine();
-
-        left = Split(left)[0];
-        right = Split(right)[1];
-
+        
         return [left,right];
 
     }
