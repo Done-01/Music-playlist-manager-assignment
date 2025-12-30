@@ -89,7 +89,7 @@ public class LinkedList
         if (index < count / 2)
         {
             current = head;
-            for(int i = 0; i < index; i++)
+            for (int i = 0; i < index; i++)
             {
                 current = current.Next!;
             }
@@ -97,7 +97,7 @@ public class LinkedList
         else
         {
             current = tail;
-            for(int i = count - 1; i > index; i--)
+            for (int i = count - 1; i > index; i--)
             {
                 current = current.Previous!;
             }
@@ -108,16 +108,14 @@ public class LinkedList
 
     public void DeleteNode(Node node)
     {
-        // Delete by title
-
         // 4 states for a node to be deleted
+
         // 1. Single node
         // 2. Head node with a next node
         // 3. Middle node (has both next and prev)
         // 4. Tail node with a previous node
 
         // 1.
-
         if (node.Next == null && node.Previous == null)
         {
             head = null;
@@ -154,15 +152,27 @@ public class LinkedList
     {
         Node? current = head;
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             Console.WriteLine(current.SongData.Title);
             current = current.Next;
         }
     }
+
     public static void Sort(LinkedList list)
     {
         // Sort by title / duration
+    }
+
+    public int CountNodesHelp(Node current)
+    {
+        if (current == null) return 0;
+        return 1 + CountNodesHelp(current.Next);
+    }
+
+    public int CountNodes()
+    {
+        return CountNodesHelp(head);
     }
 
 }
