@@ -8,7 +8,6 @@ foreach(Song song in songs)
     playlist.Add(song);
 }
 
-playlist.Delete("Bad Guy");
 playlist.Print();
 
 playlist.Test2();

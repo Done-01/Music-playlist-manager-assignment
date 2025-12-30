@@ -44,14 +44,16 @@ public class MergeSort
             Console.WriteLine(testLeft);
             testLeft = testLeft.Next;
         }
-
-        Console.WriteLine("\n");
-
+        Console.WriteLine();
         while(testRight != null)
         {
             Console.WriteLine(testRight);
             testRight = testRight.Next;
         }
+        Console.WriteLine();
+
+        left = Split(left)[0];
+        right = Split(right)[1];
 
         return [left,right];
 

@@ -152,7 +152,7 @@ public class LinkedList
     {
         Node? current = head;
 
-        for (int i = 1; i < count; i++)
+        for (int i = 1; i < count + 1; i++)
         {
             Console.WriteLine($"{i}. {current.SongData.Title}");
             current = current.Next;
@@ -167,8 +167,6 @@ public class LinkedList
     {
         Node[] result = MergeSort.Split(head);
         
-        Console.Write("\n" + result[0] + "\n" + result[1]);
-
     }
 
     // recursion testing
