@@ -1,17 +1,7 @@
 public class MergeSort
 {
-    private static Node FindMiddle(Node head)
+    public static Node FindMiddle(Node head)
     {
-        if (head == null)
-        {
-            throw new ArgumentNullException("Node cannot be null");
-        }
-
-        if (head.Next == null)
-        {
-            return head;
-        }
-
         Node slow = head;
         Node fast = head;
 
@@ -23,30 +13,28 @@ public class MergeSort
 
         return slow;
     }
-
-    private static Node[] Split(Node middle)
+/*
+    private static Node[] Split(Node head)
     {
-        if (middle == null)
+        if (head == null)
         {
             throw new ArgumentNullException("Node cannot be null");
         }
 
-        if (middle.Next == null)
+        if (head.Next == null)
         {
-            return [middle, null!];
+            return [head,null];
         }
 
-        Node left;
-        Node right;
+        Node middle = FindMiddle(head);
+        Node left = head;
+        Node right = middle.Next;
 
-        right = middle.Next;
-        left = middle;
-
+        // split into two
         right.Previous = null;
-        left.Next = null;
+        middle.Next = null;
 
-        return [left, right];
-
+        return [left,right];
 
     }
 
@@ -66,17 +54,18 @@ public class MergeSort
 
         Node mergedResult;
 
-        if(string.Compare(leftArtist,rightArtist) <= 0)
+        if (string.Compare(leftArtist, rightArtist) <= 0)
         {
             mergedResult = left;
-            mergedResult.Next = Merge(left.Next,right);
+            mergedResult.Next = Merge(left.Next, right);
         }
         else
         {
             mergedResult = right;
-            mergedResult.Next = Merge(left,right.Next);
+            mergedResult.Next = Merge(left, right.Next);
         }
 
         return mergedResult;
     }
+*/
 }

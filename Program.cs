@@ -10,11 +10,6 @@ foreach(Song song in songs)
 
 playlist.Print();
 
-playlist.Delete(0);
-playlist.Delete("Bad Guy");
-playlist.Delete(playlist.Count -1);
-playlist.Print();
 
-int count = playlist.CountNodes();
-
-Console.WriteLine(count);
+// expected middle = hotel california
+playlist.Sort();

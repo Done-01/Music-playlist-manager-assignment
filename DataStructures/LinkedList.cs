@@ -154,14 +154,15 @@ public class LinkedList
 
         for (int i = 0; i < count; i++)
         {
-            Console.WriteLine(current.SongData.Title);
+            Console.WriteLine($"{i}. {current.SongData.Title}");
             current = current.Next;
         }
     }
 
-    public static void Sort(LinkedList list)
+    public void Sort()
     {
-        // Sort by title / duration
+        string middle = MergeSort.FindMiddle(head).SongData.Title;
+        Console.WriteLine(middle);
     }
 
     public int CountNodesHelp(Node current)
