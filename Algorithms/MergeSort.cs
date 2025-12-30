@@ -13,8 +13,8 @@ public class MergeSort
 
         return slow;
     }
-/*
-    private static Node[] Split(Node head)
+
+    public static Node[] Split(Node head)
     {
         if (head == null)
         {
@@ -34,10 +34,13 @@ public class MergeSort
         right.Previous = null;
         middle.Next = null;
 
+        // test
+        Console.WriteLine($"{middle}\n{right}");
+
         return [left,right];
 
     }
-
+/*
     private static Node Merge(Node left, Node right)
     {
         string leftArtist = left.SongData.Artist;

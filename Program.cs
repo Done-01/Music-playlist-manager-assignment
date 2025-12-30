@@ -10,6 +10,4 @@ foreach(Song song in songs)
 
 playlist.Print();
 
-
-// expected middle = hotel california
-playlist.Sort();
+playlist.Test();

@@ -159,12 +159,14 @@ public class LinkedList
         }
     }
 
-    public void Sort()
+    public void Test()
     {
-        string middle = MergeSort.FindMiddle(head).SongData.Title;
-        Console.WriteLine(middle);
+        Node[] result = MergeSort.Split(head);
+        Console.WriteLine($"{result[0]}\n{result[1]}");
     }
 
+
+    // recursion testing
     public int CountNodesHelp(Node current)
     {
         if (current == null) return 0;
