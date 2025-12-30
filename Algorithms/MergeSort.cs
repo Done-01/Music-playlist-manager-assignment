@@ -3,9 +3,9 @@ public class MergeSort
     public static Node FindMiddle(Node head)
     {
         Node slow = head;
-        Node fast = head;
+        Node fast = head.Next;
 
-        while (slow.Next != null && fast.Next.Next != null)
+        while (fast.Next != null && fast.Next.Next != null)
         {
             slow = slow.Next;
             fast = fast.Next.Next;
@@ -35,7 +35,19 @@ public class MergeSort
         middle.Next = null;
 
         // test
-        Console.WriteLine($"{middle}\n{right}");
+        while(left != null)
+        {
+            Console.WriteLine(left);
+            left = left.Next;
+        }
+
+        Console.WriteLine("\n");
+        
+        while(right != null)
+        {
+            Console.WriteLine(right);
+            right = right.Next;
+        }
 
         return [left,right];
 
