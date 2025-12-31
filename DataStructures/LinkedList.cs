@@ -178,7 +178,7 @@ public class LinkedList
     }
     public void Test3()
     {
-       head = MergeSort.Sort(head);
+       MergeSort.Sort(head);
     }
 
 

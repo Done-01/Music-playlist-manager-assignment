@@ -16,5 +16,6 @@ playlist.Add(songs[1]);
 playlist.Print();
 
 playlist.Test3();
-
+int i = playlist.Count;
 playlist.Print();
+Console.WriteLine(i);

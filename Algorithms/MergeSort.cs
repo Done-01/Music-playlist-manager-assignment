@@ -2,8 +2,17 @@ public class MergeSort
 {
     public static Node FindMiddle(Node head)
     {
+        if (head == null)
+        {
+            throw new ArgumentNullException(nameof(head));
+        }
+
+        if (head.Next == null)
+        {
+            return head;
+        }
+
         Node slow = head;
-        // changed from fast = head to fast = head.next
         Node fast = head.Next;
 
         while (fast != null && fast.Next != null)
@@ -19,7 +28,7 @@ public class MergeSort
     {
         if (head == null)
         {
-            throw new ArgumentNullException("Node cannot be null");
+            throw new ArgumentNullException(nameof(head));
         }
 
         if (head.Next == null)
@@ -32,10 +41,13 @@ public class MergeSort
         Node left = head;
         Node right = middle.Next;
 
-        // split into two
-        right.Previous = null;
+        // Need to cut lNode tail from rNode head
         middle.Next = null;
+        right.Previous = null;
+
+        // redundant but leave for now
         left.Previous = null;
+
         // test
         Node testLeft = left;
         Console.WriteLine("Left half: ");
@@ -92,7 +104,7 @@ public class MergeSort
             }
 
         }
-    
+
         return mergedResult;
     }
 
