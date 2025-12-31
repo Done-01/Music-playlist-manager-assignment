@@ -148,12 +148,43 @@ public class LinkedList
         titleHash.Remove(node.SongData.Title);
     }
 
+    public int Search(string songTitle)
+    {
+        if (head == null)
+        {
+            throw new Exception("List contains no nodes");
+        }
+        if (!titleHash.TryGetValue(songTitle, out Node? node))
+        {
+            throw new Exception("Song title not present in list");
+        }
+
+        Node? current = head;
+        int i = 0;
+
+        while(current != null)
+        {
+            if(current == node)
+            {
+                return i;
+            }
+            else
+            {
+                current = current.Next;
+                i++;
+            }
+        }
+
+        return -1; // hash table out of sync with linked list.
+    }
+
+
     public void Print()
     {
         Node? current = head;
 
         int i = 0;
-        while(current != null)
+        while (current != null)
         {
             Console.WriteLine($"{i}. {current}");
             current = current.Next;
