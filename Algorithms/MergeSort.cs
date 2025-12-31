@@ -48,7 +48,7 @@ public class MergeSort
         // redundant but leave for now
         left.Previous = null;
 
-        // test
+        /* test
         Node testLeft = left;
         Console.WriteLine("Left half: ");
         while (testLeft != null)
@@ -64,12 +64,13 @@ public class MergeSort
             Console.WriteLine(testRight);
             testRight = testRight.Next;
         }
+        */
 
         return [left, right];
 
     }
-
-    public static Node Merge(Node left, Node right)
+    // Code for sorting by title.
+    public static Node MergeByTitle(Node left, Node right)
     {
         if (left == null)
         {
@@ -88,7 +89,7 @@ public class MergeSort
         if (string.Compare(leftTitle, rightTitle) <= 0)
         {
             mergedResult = left;
-            mergedResult.Next = Merge(left.Next, right);
+            mergedResult.Next = MergeByTitle(left.Next, right);
             if (mergedResult.Next != null)
             {
                 mergedResult.Next.Previous = mergedResult;
@@ -97,7 +98,7 @@ public class MergeSort
         else
         {
             mergedResult = right;
-            mergedResult.Next = Merge(left, right.Next);
+            mergedResult.Next = MergeByTitle(left, right.Next);
             if (mergedResult.Next != null)
             {
                 mergedResult.Next.Previous = mergedResult;
@@ -108,7 +109,7 @@ public class MergeSort
         return mergedResult;
     }
 
-    public static Node Sort(Node head)
+    public static Node SortByTitle(Node head)
     {
         if (head == null || head.Next == null)
         {
@@ -117,11 +118,65 @@ public class MergeSort
 
         Node[] split = Split(head);
 
-        //recursion starts here
-        Node sortedLeft = Sort(split[0]);
-        Node sortedRight = Sort(split[1]);
+        Node sortedLeft = SortByTitle(split[0]);
+        Node sortedRight = SortByTitle(split[1]);
 
-        return Merge(sortedLeft, sortedRight);
+        return MergeByTitle(sortedLeft, sortedRight);
 
+    }
+
+    // Code for sorting by duration.
+        public static Node MergeByDuration(Node left, Node right)
+    {
+        if (left == null)
+        {
+            return right;
+        }
+        if (right == null)
+        {
+            return left;
+        }
+
+        TimeSpan leftDuration = left.SongData.Duration;
+        TimeSpan rightDuration = right.SongData.Duration;
+
+        Node mergedResult;
+
+        if (leftDuration <= rightDuration)
+        {
+            mergedResult = left;
+            mergedResult.Next = MergeByDuration(left.Next, right);
+            if (mergedResult.Next != null)
+            {
+                mergedResult.Next.Previous = mergedResult;
+            }
+        }
+        else
+        {
+            mergedResult = right;
+            mergedResult.Next = MergeByDuration(left, right.Next);
+            if (mergedResult.Next != null)
+            {
+                mergedResult.Next.Previous = mergedResult;
+            }
+
+        }
+
+        return mergedResult;
+    }
+
+    public static Node SortByDuration(Node head)
+    {
+        if (head == null || head.Next == null)
+        {
+            return head;
+        }
+
+        Node[] split = Split(head);
+
+        Node sortedLeft = SortByDuration(split[0]);
+        Node sortedRight = SortByDuration(split[1]);
+
+        return MergeByDuration(sortedLeft, sortedRight);
     }
 }

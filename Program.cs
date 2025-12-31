@@ -8,14 +8,8 @@ foreach(Song song in songs)
     playlist.Add(song);
 }
 
-/*
-playlist.Add(songs[0]);
-playlist.Add(songs[1]);
-*/
-
 playlist.Print();
 
-playlist.Test3();
-int i = playlist.Count;
-playlist.Print();
-Console.WriteLine(i);
+playlist.DurationTest();
+
+playlist.TitleTest();

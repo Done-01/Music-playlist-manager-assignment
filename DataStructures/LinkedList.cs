@@ -159,40 +159,19 @@ public class LinkedList
             current = current.Next;
             i++;
         }
+        Console.WriteLine();
     }
 
-    public void Test1()
+    public void DurationTest()
     {
-        Console.WriteLine(MergeSort.FindMiddle(head));
-    }
-    public void Test2()
-    {
-        Node[] result = MergeSort.Split(head);
-        Node merged = MergeSort.Merge(result[0], result[1]);
-
-        while (merged != null)
-        {
-            Console.WriteLine(merged);
-            merged = merged.Next;
-        }
-    }
-    public void Test3()
-    {
-       MergeSort.Sort(head);
+        head = MergeSort.SortByDuration(head);
+        Print();
     }
 
-
-
-    // recursion testing
-    public int CountNodesHelp(Node current)
+    public void TitleTest()
     {
-        if (current == null) return 0;
-        return 1 + CountNodesHelp(current.Next);
-    }
-
-    public int CountNodes()
-    {
-        return CountNodesHelp(head);
+        head = MergeSort.SortByTitle(head);
+        Print();
     }
 
 }

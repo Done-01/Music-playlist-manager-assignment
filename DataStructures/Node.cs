@@ -13,6 +13,7 @@ public class Node
     {
         return $"Node: Song='{SongData?.Title}', " +
                $"HasNext={Next != null}, " +
-               $"HasPrevious={Previous != null}";
+               $"HasPrevious={Previous != null} " +
+               $"Duration={SongData?.Duration}";
     }
 }
