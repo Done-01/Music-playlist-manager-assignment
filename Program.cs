@@ -1,4 +1,4 @@
-﻿/*
+﻿
 string filePath = "Files/songs_dataset.csv";
 List<Song> songs = Song.ImportSongs(filePath);
 
@@ -11,6 +11,15 @@ foreach(Song song in songs)
 
 playlist.Print();
 
+playlist.ShuffleList();
+
+playlist.Print();
+
+playlist.ShuffleList();
+
+playlist.Print();
+
+/*
 playlist.DurationTest();
 
 playlist.TitleTest();
@@ -35,4 +44,3 @@ Shuffle.Shufflez(array);
 PrintA(array);
 */
 
-Shuffle.ShuffleTest();

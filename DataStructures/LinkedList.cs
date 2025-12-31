@@ -162,9 +162,9 @@ public class LinkedList
         Node? current = head;
         int i = 0;
 
-        while(current != null)
+        while (current != null)
         {
-            if(current == node)
+            if (current == node)
             {
                 return i;
             }
@@ -178,6 +178,42 @@ public class LinkedList
         return -1; // hash table out of sync with linked list.
     }
 
+    public void ShuffleList()
+    {
+        if (head == null)
+        {
+            throw new Exception("List contains no nodes");
+        }
+
+        Node current = head;
+        Song[] array = new Song[count];
+        int i = 0;
+
+        while (current != null && i < count)
+        {
+            array[i] = current.SongData;
+            current = current.Next;
+            i++;
+        }
+
+        Shuffle.FisherYates(array);
+
+        Clear();
+
+        for (int j = 0; j < array.Length; j++)
+        {
+            Add(array[j]);
+        }
+
+    }
+    public void Clear()
+    {
+        head = null;
+        tail = null;
+        count = 0;
+        totalDuration = new TimeSpan();
+        titleHash.Clear();
+    }
 
     public void Print()
     {
