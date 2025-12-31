@@ -152,10 +152,12 @@ public class LinkedList
     {
         Node? current = head;
 
-        for (int i = 1; i < count + 1; i++)
+        int i = 0;
+        while(current != null)
         {
-            Console.WriteLine($"{i}. {current.SongData.Title}");
+            Console.WriteLine($"{i}. {current}");
             current = current.Next;
+            i++;
         }
     }
 
@@ -166,8 +168,20 @@ public class LinkedList
     public void Test2()
     {
         Node[] result = MergeSort.Split(head);
-        
+        Node merged = MergeSort.Merge(result[0], result[1]);
+
+        while (merged != null)
+        {
+            Console.WriteLine(merged);
+            merged = merged.Next;
+        }
     }
+    public void Test3()
+    {
+       head = MergeSort.Sort(head);
+    }
+
+
 
     // recursion testing
     public int CountNodesHelp(Node current)
