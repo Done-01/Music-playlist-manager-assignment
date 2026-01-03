@@ -1,6 +1,6 @@
 public class Shuffle
 {
-
+    // just here for testing.
     public static void FisherYates(int[] array)
     {
         Random random = new Random();
@@ -34,6 +34,7 @@ public class Shuffle
         }
     }
 
+    // trying to test that the shuffle was actually random, prints a 10x10 grid with the number of times each number was in each index.
     public static void ShuffleTest()
     {
         int[] array = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };

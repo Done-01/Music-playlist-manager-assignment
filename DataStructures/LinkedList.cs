@@ -1,9 +1,17 @@
-using System.Transactions;
-
 public class LinkedList
 {
     private Node? head;
+
+    public Node? Head
+    {
+        get { return head; }
+    }
     private Node? tail;
+
+    public Node? Tail
+    {
+        get { return tail; }
+    }
 
     private int count;
     public int Count
@@ -28,7 +36,7 @@ public class LinkedList
         titleHash = new Dictionary<string, Node>();
     }
 
-    public void Add(Song song)
+    public bool Add(Song song)
     {
         if (song == null)
         {
@@ -37,7 +45,7 @@ public class LinkedList
 
         if (titleHash.ContainsKey(song.Title))
         {
-            throw new Exception("Duplicate Song");
+            return false;
         }
 
         Node newNode = new Node(song);
@@ -57,31 +65,33 @@ public class LinkedList
         count++;
         totalDuration = totalDuration + song.Duration;
         titleHash.Add(song.Title, newNode);
+        return true;
     }
 
-    public void Delete(string songTitle)
+    public bool Delete(string songTitle)
     {
         if (head == null)
         {
-            throw new Exception("List contains no nodes");
+            return false;
         }
         if (!titleHash.TryGetValue(songTitle, out Node? node))
         {
-            throw new Exception("Song title not present in list");
+            return false;
         }
 
         DeleteNode(node);
+        return true;
     }
 
-    public void Delete(int index)
+    public bool Delete(int index)
     {
         if (head == null)
         {
-            throw new Exception("List contains no nodes");
+            return false;
         }
         if (index < 0 || index >= count)
         {
-            throw new ArgumentOutOfRangeException(nameof(index));
+            return false;
         }
 
         Node? current;
@@ -104,6 +114,7 @@ public class LinkedList
         }
 
         DeleteNode(current!);
+        return true;
     }
 
     public void DeleteNode(Node node)
@@ -152,11 +163,11 @@ public class LinkedList
     {
         if (head == null)
         {
-            throw new Exception("List contains no nodes");
+            return -1;
         }
         if (!titleHash.TryGetValue(songTitle, out Node? node))
         {
-            throw new Exception("Song title not present in list");
+            return -1;
         }
 
         Node? current = head;
@@ -178,11 +189,11 @@ public class LinkedList
         return -1; // hash table out of sync with linked list.
     }
 
-    public void ShuffleList()
+    public bool ShuffleList()
     {
         if (head == null)
         {
-            throw new Exception("List contains no nodes");
+            return false;
         }
 
         Node current = head;
@@ -204,7 +215,7 @@ public class LinkedList
         {
             Add(array[j]);
         }
-
+        return true;
     }
     public void Clear()
     {
@@ -219,26 +230,66 @@ public class LinkedList
     {
         Node? current = head;
 
-        int i = 0;
+        int i = 1;
         while (current != null)
         {
-            Console.WriteLine($"{i}. {current}");
+            Console.WriteLine($"{i}. {current.SongData.Title} by {current.SongData.Artist} duration {current.SongData.Duration}");
             current = current.Next;
             i++;
         }
-        Console.WriteLine();
+    }
+    public bool SortByArtist()
+    {
+        if (head == null)
+            return false;
+
+        head = MergeSort.SortByArtist(head);
+
+        RebuildAfterSort();
+
+        return true;
     }
 
-    public void DurationTest()
+    public bool SortByDuration()
     {
+        if (head == null)
+            return false;
+
         head = MergeSort.SortByDuration(head);
-        Print();
-    }
 
-    public void TitleTest()
+        RebuildAfterSort();
+
+        return true;
+    }
+    /*
+    public bool SortByTitle()
     {
+        if (head == null)
+            return false;
+
         head = MergeSort.SortByTitle(head);
-        Print();
+
+        RebuildAfterSort();
+
+        return true;
+    }
+    */
+    private void RebuildAfterSort()
+    {
+        // Clear and rebuild hash table
+        titleHash.Clear();
+
+        Node? current = head;
+
+        while (current != null)
+        {
+            titleHash.Add(current.SongData.Title, current);
+
+            if (current.Next == null)
+                tail = current;  
+
+            current = current.Next;
+        }
     }
 
 }

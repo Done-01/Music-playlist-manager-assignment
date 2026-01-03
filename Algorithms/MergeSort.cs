@@ -70,7 +70,7 @@ public class MergeSort
 
     }
     // Code for sorting by title.
-    public static Node MergeByTitle(Node left, Node right)
+    public static Node MergeByArtist(Node left, Node right)
     {
         if (left == null)
         {
@@ -81,15 +81,15 @@ public class MergeSort
             return left;
         }
 
-        string leftTitle = left.SongData.Title;
-        string rightTitle = right.SongData.Title;
+        string leftArtist = left.SongData.Artist;
+        string rightArtist = right.SongData.Artist;
 
         Node mergedResult;
 
-        if (string.Compare(leftTitle, rightTitle) <= 0)
+        if (string.Compare(leftArtist, rightArtist) <= 0)
         {
             mergedResult = left;
-            mergedResult.Next = MergeByTitle(left.Next, right);
+            mergedResult.Next = MergeByArtist(left.Next, right);
             if (mergedResult.Next != null)
             {
                 mergedResult.Next.Previous = mergedResult;
@@ -98,7 +98,7 @@ public class MergeSort
         else
         {
             mergedResult = right;
-            mergedResult.Next = MergeByTitle(left, right.Next);
+            mergedResult.Next = MergeByArtist(left, right.Next);
             if (mergedResult.Next != null)
             {
                 mergedResult.Next.Previous = mergedResult;
@@ -109,7 +109,7 @@ public class MergeSort
         return mergedResult;
     }
 
-    public static Node SortByTitle(Node head)
+    public static Node SortByArtist(Node head)
     {
         if (head == null || head.Next == null)
         {
@@ -118,10 +118,10 @@ public class MergeSort
 
         Node[] split = Split(head);
 
-        Node sortedLeft = SortByTitle(split[0]);
-        Node sortedRight = SortByTitle(split[1]);
+        Node sortedLeft = SortByArtist(split[0]);
+        Node sortedRight = SortByArtist(split[1]);
 
-        return MergeByTitle(sortedLeft, sortedRight);
+        return MergeByArtist(sortedLeft, sortedRight);
 
     }
 
