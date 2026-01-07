@@ -9,9 +9,6 @@ foreach (Song song in library)
     playlist.Add(song);
 }
 
-
-// playlist.Add(library[1]);
-
 PlaybackSimulation playback = new PlaybackSimulation(playlist);
 
 Menu menu = new Menu(library,playlist,playback);

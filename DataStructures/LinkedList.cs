@@ -237,6 +237,9 @@ public class LinkedList
             current = current.Next;
             i++;
         }
+        Console.WriteLine($"Playlist total duration: {TotalDuration}");
+        Console.WriteLine($"Playlist total count: {Count}");
+
     }
     public bool SortByArtist()
     {
@@ -261,19 +264,6 @@ public class LinkedList
 
         return true;
     }
-    /*
-    public bool SortByTitle()
-    {
-        if (head == null)
-            return false;
-
-        head = MergeSort.SortByTitle(head);
-
-        RebuildAfterSort();
-
-        return true;
-    }
-    */
     private void RebuildAfterSort()
     {
         // Clear and rebuild hash table
