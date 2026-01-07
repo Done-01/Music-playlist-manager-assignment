@@ -1,0 +1,374 @@
+CLASS Song
+    PUBLIC id AS Integer
+    PUBLIC title AS String
+    PUBLIC artist AS String
+    PUBLIC album AS String  // nullable
+    PUBLIC duration AS TimeSpan
+    PUBLIC genre AS String
+    
+    STATIC METHOD ImportSongs(fileLocation AS String) RETURNS DYNAMIC ARRAY OF Song
+        songsList <- NEW DYNAMIC ARRAY OF Song
+        
+        FOR EACH line IN ReadFile(fileLocation) SKIP FIRST LINE DO
+            IF line IS EMPTY THEN
+                CONTINUE
+            END IF
+            
+            songValues <- line.SPLIT(',')
+            id <- PARSE_INT(songValues[0])
+            duration <- PARSE_TIMESPAN(songValues[4])
+            
+            newSong <- NEW Song(id, songValues[1], songValues[2], 
+                               songValues[3], duration, songValues[5])
+            songsList.ADD(newSong)
+        END FOR EACH
+        
+        RETURN songsList
+    END METHOD
+END CLASS
+
+CLASS LinkedList
+    PRIVATE head AS Node
+    PRIVATE tail AS Node  
+    PRIVATE count AS Integer
+    PRIVATE totalDuration AS TimeSpan
+    PRIVATE titleHash AS HASH TABLE OF String TO Node
+    
+    METHOD Add(song AS Song) RETURNS Boolean
+        IF titleHash CONTAINS song.title THEN
+            RETURN false
+        END IF
+        
+        newNode <- NEW Node(song)
+        
+        IF head IS NULL THEN
+            head <- newNode
+            tail <- newNode
+        ELSE
+            tail.next <- newNode
+            newNode.previous <- tail
+            tail <- newNode
+        END IF
+        
+        count <- count + 1
+        totalDuration <- totalDuration + song.duration
+        titleHash.ADD(song.title, newNode)
+        RETURN true
+    END METHOD
+    
+    DECLARE NODE current
+
+    METHOD Delete (index AS integer) RETURNS Boolean
+        IF index < count / 2 THEN
+            current <- head
+            FOR i FROM 0 TO index
+                current <- current.NEXT
+            END FOR
+        ELSE
+            current <- tail
+            FOR i FROM count -1 TO index
+                current <- current.Previous
+            END FOR
+        END IF
+
+        DeleteNode(current)
+        RETURN true
+    END METHOD
+
+    METHOD Delete (title AS string) RETURNS Boolean
+        node <- titleHash[title]
+        DeleteNode(node)
+        RETURN true
+    END METHOD
+
+
+
+    METHOD DeleteNode(node AS Node) RETURNS Void
+        // Handle 4 cases for node deletion
+        
+        IF node.next IS NULL AND node.previous IS NULL THEN
+            // Single node
+            head <- NULL
+            tail <- NULL
+        ELSE IF node.previous IS NULL THEN
+            // Head node
+            head <- node.next
+            node.next.previous <- NULL
+        ELSE IF node.next IS NULL THEN
+            // Tail node
+            tail <- node.previous
+            node.previous.next <- NULL
+        ELSE
+            // Middle node
+            node.previous.next <- node.next
+            node.next.previous <- node.previous
+        END IF
+        
+        count <- count - 1
+        totalDuration <- totalDuration - node.songData.duration
+        titleHash.REMOVE(node.songData.title)
+    END METHOD
+
+CLASS MergeSort
+
+    STATIC METHOD FindMiddle(head AS Node) RETURNS Node
+        IF head.next IS NULL THEN
+            RETURN head
+        END IF
+        
+        slow <- head
+        fast <- head.next
+        
+        WHILE fast IS NOT NULL AND fast.next IS NOT NULL DO
+            slow <- slow.next
+            fast <- fast.next.next
+        END WHILE
+        
+        RETURN slow
+    END METHOD
+    
+    STATIC METHOD Split(head AS Node) RETURNS ARRAY OF Node
+        IF head.next IS NULL THEN
+            RETURN [head, NULL]
+        END IF
+        
+        middle <- FindMiddle(head)
+        
+        left <- head
+        right <- middle.next
+        
+        // Disconnect the two halves
+        middle.next <- NULL
+        right.previous <- NULL
+        
+        RETURN [left, right]
+    END METHOD
+    
+    STATIC METHOD MergeByArtist(left AS Node, right AS Node) RETURNS Node
+        IF left IS NULL THEN
+            RETURN right
+        END IF
+        IF right IS NULL THEN
+            RETURN left
+        END IF
+        
+        leftArtist <- left.songData.artist
+        rightArtist <- right.songData.artist
+        
+        IF leftArtist <= rightArtist THEN  // string comparison
+            mergedResult <- left
+            mergedResult.next <- MergeByArtist(left.next, right)
+            IF mergedResult.next IS NOT NULL THEN
+                mergedResult.next.previous <- mergedResult
+            END IF
+        ELSE
+            mergedResult <- right
+            mergedResult.next <- MergeByArtist(left, right.next)
+            IF mergedResult.next IS NOT NULL THEN
+                mergedResult.next.previous <- mergedResult
+            END IF
+        END IF
+        
+        RETURN mergedResult
+    END METHOD
+    
+    STATIC METHOD SortByArtist(head AS Node) RETURNS Node
+        IF head IS NULL OR head.next IS NULL THEN
+            RETURN head
+        END IF
+        
+        halves <- Split(head)
+        
+        sortedLeft <- SortByArtist(halves[0])
+        sortedRight <- SortByArtist(halves[1])
+        
+        RETURN MergeByArtist(sortedLeft, sortedRight)
+    END METHOD
+    
+    STATIC METHOD MergeByDuration(left AS Node, right AS Node) RETURNS Node
+        IF left IS NULL THEN
+            RETURN right
+        END IF
+        IF right IS NULL THEN
+            RETURN left
+        END IF
+        
+        leftDuration <- left.songData.duration
+        rightDuration <- right.songData.duration
+        
+        IF leftDuration <= rightDuration THEN
+            mergedResult <- left
+            mergedResult.next <- MergeByDuration(left.next, right)
+            IF mergedResult.next IS NOT NULL THEN
+                mergedResult.next.previous <- mergedResult
+            END IF
+        ELSE
+            mergedResult <- right
+            mergedResult.next <- MergeByDuration(left, right.next)
+            IF mergedResult.next IS NOT NULL THEN
+                mergedResult.next.previous <- mergedResult
+            END IF
+        END IF
+        
+        RETURN mergedResult
+    END METHOD
+
+    STATIC METHOD SortByDuration(head AS Node) RETURNS Node
+        IF head IS NULL OR head.next IS NULL THEN
+            RETURN head
+        END IF
+        
+        halves <- Split(head)
+        
+        sortedLeft <- SortByDuration(halves[0])
+        sortedRight <- SortByDuration(halves[1])
+        
+        RETURN MergeByDuration(sortedLeft, sortedRight)
+    END METHOD
+END CLASS
+
+CLASS PlaybackSimulation
+    PRIVATE playlist AS LinkedList
+    PRIVATE currentNode AS Node
+    PRIVATE queuedNode AS Node
+    PRIVATE isLooping AS Boolean
+    
+    METHOD Start() RETURNS Boolean
+        IF playlist.head IS NULL THEN
+            RETURN false
+        END IF
+        
+        currentNode <- playlist.head
+        RETURN true
+    END METHOD
+    
+    METHOD Next() RETURNS Void
+        IF currentNode IS NULL THEN
+            RETURN
+        END IF
+        
+        IF isLooping THEN
+            RETURN
+        END IF
+        
+        IF queuedNode IS NOT NULL THEN
+            currentNode <- queuedNode
+            queuedNode <- NULL
+        ELSE IF currentNode.next IS NOT NULL THEN
+            currentNode <- currentNode.next
+        ELSE
+            currentNode <- playlist.head
+        END IF
+    END METHOD
+    
+    METHOD Previous() RETURNS Void
+        IF currentNode IS NULL THEN
+            RETURN
+        END IF
+        
+        IF isLooping THEN
+            RETURN
+        END IF
+        
+        IF currentNode.previous IS NOT NULL THEN
+            currentNode <- currentNode.previous
+        ELSE
+            currentNode <- playlist.tail
+        END IF
+    END METHOD
+    
+    METHOD Queue(song AS Song) RETURNS Boolean
+        IF song IS NULL OR currentNode IS NULL THEN
+            RETURN false
+        END IF
+        
+        queuedNode <- NEW Node(song)
+        queuedNode.next <- currentNode.next
+        RETURN true
+    END METHOD
+    
+END CLASS
+
+///// search method is here as per template
+
+METHOD Search(songTitle AS String) RETURNS Integer
+    IF head IS NULL THEN
+        RETURN -1
+    END IF
+    
+    IF NOT titleHash.CONTAINS(songTitle) THEN
+        RETURN -1
+    END IF
+    
+    node <- titleHash.GET(songTitle)
+    current <- head
+    i <- 0
+    
+    WHILE current IS NOT NULL DO
+        IF current = node THEN
+            RETURN i
+        ELSE
+            current <- current.next
+            i <- i + 1
+        END IF
+    END WHILE
+    
+    RETURN -1
+END METHOD
+
+CLASS Shuffle
+
+    STATIC METHOD FisherYates(array AS ARRAY OF Song) RETURNS Void
+        // Start at the highest index and work backwards
+        FOR i FROM array.LENGTH - 1 TO 1 STEP -1 DO
+            // Get random number from 0 to i (inclusive)
+            j <- RANDOM(0, i + 1)
+            
+            // Swap array[i] and array[j]
+            temp <- array[i]
+            array[i] <- array[j]
+            array[j] <- temp
+        END FOR
+    END METHOD
+
+END CLASS
+
+// Extra features.
+// Import / Export playlist.
+// Other extra features are in playback simulation (loop current song) (queue a song)
+
+METHOD ExportPlaylist(filename AS String) RETURNS Void
+    IF playlist.count = 0 THEN
+        RETURN
+    END IF
+    
+    OPEN FILE filename FOR WRITING
+    WRITE "ID,Title,Artist,Album,Duration,Genre"  // Header
+    
+    current <- playlist.head
+    WHILE current IS NOT NULL DO
+        song <- current.songData
+        WRITE song.id, song.title, song.artist, song.album, song.duration, song.genre
+        current <- current.next
+    END WHILE
+    
+    CLOSE FILE
+END METHOD
+
+METHOD ImportPlaylist(filename AS String) RETURNS Void
+    IF FILE filename DOES NOT EXIST THEN
+        RETURN
+    END IF
+    
+    importedSongs <- Song.ImportSongs(filename)
+    added <- 0
+    skipped <- 0
+    
+    FOR EACH song IN importedSongs DO
+        IF playlist.Add(song) THEN
+            added <- added + 1
+        ELSE
+            skipped <- skipped + 1
+        END IF
+    END FOR EACH
+END METHOD

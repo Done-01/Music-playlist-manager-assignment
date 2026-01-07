@@ -96,6 +96,7 @@ public class LinkedList
 
         Node? current;
 
+        // start from either head or tail depending on index
         if (index < count / 2)
         {
             current = head;
